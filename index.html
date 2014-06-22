@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>App</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="style.css">
+    <!-- vendors -->
+    <script src="vendors/underscore.js"></script>
+    <script src="vendors/jquery-1.9.1.js"></script>
+    <script src="vendors/backbone.js"></script>
+
+    <script src="vendors/b64.js"></script>
+    <script src="vendors/LZWEncoder.js"></script>
+    <script src="vendors/NeuQuant.js"></script>
+    <script src="vendors/GIFEncoder.js"></script>
+
+    <script src="vendors/FileSaver.js"></script>
+    <!-- modues -->
+    <script src="modules/custom_view.js"></script>
+    <script src="index.js"></script>
+    <script src="modules/sandbox.js"></script>
+
+    <script src="modules/widgets/main_navigation.js"></script>
+    <script src="modules/widgets/pictogram/pictogram_form.js"></script>
+    <script src="modules/widgets/pictogram/pictogram.js"></script>
+    <script src="modules/widgets/pictogram/add_value_form.js"></script>
+    <script src="modules/widgets/net/net_form.js"></script>
+    <script src="modules/widgets/net/net.js"></script>
+    <script src="modules/widgets/generating/pmd.js"></script>
+</head>
+<body>
+    <div class="main-nav"></div>
+    <hr>
+    <div class="secondary-nav"></div>
+    <div class="canvas"></div>
+
+
+
+    <!-- Templates -->
+    <script type="text/html" id="main-navigation">
+        <div id="main-buttons">
+            <button id="pict-create" class="btn">Создать график</button>
+            <button id="net-create" class="btn">Создать сетку</button>
+            <button id="generate-pmd" class="btn">Сгенерировать .pmd</button>
+        </div>
+        <div id="pict-buttons">
+            <button id="pict-add-value" class="btn">Добавить величину</button>
+            <button id="pict-delete" class="btn">Удалить график</button>
+        </div>
+        <div id="net-buttons">
+            <button id="net-prev" class="btn">&lt;&lt; Prev</button>
+            <button id="net-start" class="btn">Start</button>
+            <button id="net-next" class="btn">Next &gt;&gt;</button>
+            <div class="net-speed-stats">
+                Частота : <input class="speed form-field" value="500" type="text"> ms (мин - 100, макс - 5000)
+            </div>
+            <button id="net-delete" class="btn">Удалить сетку</button>
+            <button id="net-visibility" class="btn">Видимость сетки</button>
+        </div>
+        <div class="cf"></div>
+    </script>
+
+    <script type="text/html" id="pictogram-form">
+        <br>
+        <label class="styled"><input class="inputData" name="dat" type="file">Загрузить файл .dat</label>
+        <span class="dat-name"></span><br><br>
+        <label class="styled"><input class="inputData" name="measure" type="file">Загрузить файл .measure</label>
+        <span class="measure-name"></span><br><br>
+        <label class="styled"><input class="inputData" name="pmd" type="file">Загрузить файл .pmd</label>
+        <span class="pmd-name"></span><br><br><br>
+        <label><input class="inputData form-field" name="line"> линия уровня</label><br><br>
+        <label><input class="inputData form-field" name="momentTime"> момент времени</label><br><br>
+        <label><input class="inputData form-field" name="value"> номер величины</label><br><br><br>
+        <label><input class="inputData form-field" name="thickness"> толщина графика</label><br><br>
+        <label><input class="inputData form-field" name="color" type="color"> цвет графика</label><br><br><br>
+        <button class="ok btn">OK</button><button class="cancel btn">Cancel</button>
+    </script>
+
+    <script type="text/html" id="add-value-form">
+        <br>
+        <label><input name="value" class="form-field"> номер величины</label><br><br>
+        <label><input name="momentTime" class="form-field"> момент времени</label><br><br><br>
+        <label><input name="thickness" class="form-field"> толщина графика</label><br><br>
+        <label><input name="color"  class="form-field" type="color"> цвет графика</label><br><br><br>
+        <button class="ok btn">OK</button><button class="cancel btn">Cancel</button>
+    </script>
+
+    <script type="text/html" id="pmd-template">
+        <br>
+        <label class="styled"><input class="inputData" name="nlist" type="file">Загрузить файл NLIST</label>
+        <span class="nlist-name"></span><br><br>
+        <label class="styled"><input class="inputData" name="elist" type="file">Загрузить файл ELIST</label>
+        <span class="elist-name"></span><br><br>
+        <!--<label class="styled"><input class="inputData" name="dlist" type="file">Загрузить файл DLIST</label>-->
+        <!--<span class="dlist-name"></span><br><br>-->
+        <button class="ok btn">Cкачать</button><button class="cancel btn">Cancel</button>
+    </script>
+
+    <script type="text/html" id="pictogram-template">
+        <canvas id="drawCanvas" height="600" width="800"></canvas>
+    </script>
+
+    <script type="text/html" id="net-template">
+        <div class="saving">
+            <button disabled class="save-as-gif btn">Открыть анимацию для сохранения</button>
+            <input class="saving-animation-flag" type="checkbox"/>
+            <button class="save-as-image btn">Открыть картинку для сохранения</button>
+        </div>
+        <div class="cf"></div>
+        <div class="net-stats">
+            <span class="current-mt"></span>
+            <progress class="progressbar"></progress>
+            &nbsp;&nbsp;<span class="max-mt"></span>
+        </div>
+        <canvas id="drawCanvas" height="600" width="800"></canvas>
+    </script>
+
+    <script type="text/html" id="net-form">
+        <br>
+        <label class="styled"><input class="inputData" name="pmd" type="file">Загрузить файл .pmd</label>
+        <span class="pmd-name"></span><br><br>
+        <label class="styled"><input class="inputData" name="dat" type="file">Загрузить файл .dat</label>
+        <span class="dat-name"></span><br><br><br>
+        <label><input class="inputData form-field" name="momentTime" type="text"> момент времени</label><br><br>
+        <label><input class="inputData form-field" name="value" type="text"> номер величины</label><br><br><br>
+        <button class="ok btn">OK</button><button class="cancel btn">Cancel</button>
+    </script>
+</body>
+</html>
