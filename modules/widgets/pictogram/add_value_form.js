@@ -11,21 +11,26 @@
         pictProps: ['value', 'momentTime', 'thickness'],
 
         addValue: function() {
-            var value = this.$('[name="value"]').val(),
-                momentTime = this.$('[name="momentTime"]').val(),
-                thickness = this.$('[name="thickness"]').val(),
-                color = this.$('[name="color"]').val(),
-                pictParam,
-                $wrongEl;
-
-            pictParam = {
-                value: parseInt(value),
-                momentTime: parseFloat(momentTime),
-                thickness: parseInt(thickness),
-                color: color
+            var pictParam = {
+                value: parseInt(this.$('[name="value"]').val()),
+                momentTime: parseFloat(this.$('[name="momentTime"]').val()),
+                thickness: parseInt(this.$('[name="thickness"]').val()),
+                color: this.$('[name="color"]').val()
             };
 
-            for(var i = 0, l = this.pictProps.length; i < l; i++) {
+            if(this.validate(pictParam)) {
+                app.sandbox.trigger('pictogram:add', pictParam);
+                this.remove();
+            }
+        },
+
+        validate: function(pictParam) {
+            var $wrongEl,
+                mTimes, MTExists, existingMT = [],
+                value, maxValue = 0, valuesArr, possibleValues = [],
+                i, l;
+
+            for(i = 0, l = this.pictProps.length; i < l; i++) {
                 if(!pictParam[this.pictProps[i]]) {
                     $wrongEl = this.$('[name="' + this.pictProps[i] + '"]');
                     $wrongEl.one('change', function(e) {
@@ -36,8 +41,33 @@
                 }
             }
 
-            app.sandbox.trigger('pictogram:add', pictParam);
-            this.remove();
+            mTimes = _.clone(app.pictogram.getView().mTimes); //dn!
+            mTimes.shift();
+            value = parseInt(pictParam.value);
+            valuesArr = mTimes[0].split('\n')[1].split(' ');
+            for(i = 1; i < valuesArr.length; i++) {
+                if(!isNaN(parseFloat(valuesArr[i]))) {
+                    maxValue++;
+                    possibleValues.push(i);
+                }
+            }
+            if(value < 1 || value > 5) {
+                alert('Вы ввели несуществующую величину. Возможные величины: ' + possibleValues.join(', ') + '.');
+                return;
+            }
+
+            for(i = 0, l = mTimes.length; i < l; i++) {
+                existingMT[i] = parseFloat(mTimes[i]);
+                if(pictParam.momentTime == existingMT[i]) {
+                    MTExists = true;
+                }
+            }
+            if(!MTExists) {
+                alert('Вы ввели несуществующий момент времени. Моменты времени, которые находяться в файле: ' + existingMT.join(', ') + '.');
+                return;
+            }
+
+            return true;
         },
 
         cancel: function() {
