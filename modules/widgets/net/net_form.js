@@ -35,9 +35,19 @@
         },
 
         showNet: function() {
-            var $wrongEl;
+            if(this.validate()) {
+                this.remove();
+                app.sandbox.trigger('net:show', this.data);
+            }
+        },
 
-            for(var i = 0, l = this.dataProps.length; i < l; i++) {
+        validate: function() {
+            var $wrongEl,
+                mTimes, MTExists, existingMT = [],
+                value, maxValue = 0, valuesArr, possibleValues = [],
+                i, l;
+
+            for(i = 0, l = this.dataProps.length; i < l; i++) {
                 if(!this.data[this.dataProps[i]]) {
                     $wrongEl = this.$('[name="' + this.dataProps[i] + '"]');
                     $wrongEl.one('change', function(e) {
@@ -47,8 +57,34 @@
                     return;
                 }
             }
-            this.remove();
-            app.sandbox.trigger('net:show', this.data);
+
+            mTimes = this.data.dat.split('t=');
+            mTimes.shift();
+            for(i = 0, l = mTimes.length; i < l; i++) {
+                existingMT[i] = parseFloat(mTimes[i]);
+                if(this.data.momentTime == existingMT[i]) {
+                    MTExists = true;
+                }
+            }
+            if(!MTExists) {
+                alert('Вы ввели несуществующий момент времени. Моменты времени, которые находяться в файле: ' + existingMT.join(', ') + '.');
+                return;
+            }
+
+            value = parseInt(this.data.value);
+            valuesArr = mTimes[0].split('\n')[1].split(' ');
+            for(i = 1; i < valuesArr.length; i++) {
+                if(!isNaN(parseFloat(valuesArr[i]))) {
+                    maxValue++;
+                    possibleValues.push(i);
+                }
+            }
+            if(value < 1 || value > 5) {
+                alert('Вы ввели несуществующую величину. Возможные величины: ' + possibleValues.join(', ') + '.');
+                return;
+            }
+
+            return true;
         },
 
         cancel: function() {
