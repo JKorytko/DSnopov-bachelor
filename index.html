@@ -34,6 +34,21 @@
     <hr>
     <div class="secondary-nav"></div>
     <div class="canvas"></div>
+    <div class="overlay">
+        <div class="overlay-board">
+            <div id="fadingBarsG">
+                <div id="fadingBarsG_1" class="fadingBarsG"></div>
+                <div id="fadingBarsG_2" class="fadingBarsG"></div>
+                <div id="fadingBarsG_3" class="fadingBarsG"></div>
+                <div id="fadingBarsG_4" class="fadingBarsG"></div>
+                <div id="fadingBarsG_5" class="fadingBarsG"></div>
+                <div id="fadingBarsG_6" class="fadingBarsG"></div>
+                <div id="fadingBarsG_7" class="fadingBarsG"></div>
+                <div id="fadingBarsG_8" class="fadingBarsG"></div>
+            </div>
+            Загрузка файлов...
+        </div>
+    </div>
 
 
 
@@ -62,18 +77,27 @@
     </script>
 
     <script type="text/html" id="pictogram-form">
-        <br>
-        <label class="styled"><input class="inputData" name="dat" type="file">Загрузить файл .dat</label>
-        <span class="dat-name"></span><br><br>
-        <label class="styled"><input class="inputData" name="measure" type="file">Загрузить файл .measure</label>
-        <span class="measure-name"></span><br><br>
-        <label class="styled"><input class="inputData" name="pmd" type="file">Загрузить файл .pmd</label>
-        <span class="pmd-name"></span><br><br><br>
-        <label><input class="inputData form-field" name="line"> линия уровня</label><br><br>
-        <label><input class="inputData form-field" name="momentTime"> момент времени</label><br><br>
-        <label><input class="inputData form-field" name="value"> номер величины</label><br><br><br>
-        <label><input class="inputData form-field" name="thickness"> толщина графика</label><br><br>
-        <label><input class="inputData form-field" name="color" type="color"> цвет графика</label><br><br><br>
+        <label class="input-type-label">
+            <input type="radio" name="input-type" value="custom" checked>
+            <span>Локальные входные данные</span>
+        </label>
+        <div class="custom-input-block">
+            <label class="styled"><input class="inputData" name="dat" type="file">Загрузить файл .dat</label>
+            <span class="dat-name"></span><br><br>
+            <label class="styled"><input class="inputData" name="measure" type="file">Загрузить файл .measure</label>
+            <span class="measure-name"></span><br><br>
+            <label class="styled"><input class="inputData" name="pmd" type="file">Загрузить файл .pmd</label>
+            <span class="pmd-name"></span><br><br><br>
+            <label><input class="inputData form-field" name="line"> линия уровня</label><br><br>
+            <label><input class="inputData form-field" name="momentTime"> момент времени</label><br><br>
+            <label><input class="inputData form-field" name="value"> номер величины</label><br><br><br>
+            <label><input class="inputData form-field" name="thickness"> толщина графика</label><br><br>
+            <label><input class="inputData form-field" name="color" type="color"> цвет графика</label>
+        </div>
+        <label class="input-type-label">
+            <input type="radio" name="input-type" value="server">
+            <span>Входные данные с сервера</span>
+        </label>
         <button class="ok btn">OK</button><button class="cancel btn">Cancel</button>
     </script>
 
@@ -117,13 +141,22 @@
     </script>
 
     <script type="text/html" id="net-form">
-        <br>
-        <label class="styled"><input class="inputData" name="pmd" type="file">Загрузить файл .pmd</label>
-        <span class="pmd-name"></span><br><br>
-        <label class="styled"><input class="inputData" name="dat" type="file">Загрузить файл .dat</label>
-        <span class="dat-name"></span><br><br><br>
-        <label><input class="inputData form-field" name="momentTime" type="text"> момент времени</label><br><br>
-        <label><input class="inputData form-field" name="value" type="text"> номер величины</label><br><br><br>
+        <label class="input-type-label">
+            <input type="radio" name="input-type" value="custom" checked>
+            <span>Локальные входные данные</span>
+        </label>
+        <div class="custom-input-block">
+            <label class="styled"><input class="inputData" name="pmd" type="file">Загрузить файл .pmd</label>
+            <span class="pmd-name"></span><br><br>
+            <label class="styled"><input class="inputData" name="dat" type="file">Загрузить файл .dat</label>
+            <span class="dat-name"></span><br><br><br>
+            <label><input class="inputData form-field" name="momentTime" type="text"> момент времени</label><br><br>
+            <label><input class="inputData form-field" name="value" type="text"> номер величины</label>
+        </div>
+        <label class="input-type-label">
+            <input type="radio" name="input-type" value="server">
+            <span>Входные данные с сервера</span>
+        </label>
         <button class="ok btn">OK</button><button class="cancel btn">Cancel</button>
     </script>
 </body>
