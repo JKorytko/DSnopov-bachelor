@@ -15,9 +15,36 @@
         },
 
         showPictogram: function() {
-            if(this.validate()) {
-                this.remove();
-                app.sandbox.trigger('pictogram:show', this.data);
+            var self = this,
+                inputType = $('input[name="input-type"]:checked').val(),
+                $overlay;
+
+            if(inputType === 'custom') {
+                if(this.validate()) {
+                    this.remove();
+                    app.sandbox.trigger('pictogram:show', this.data);
+                }
+            } else {
+                $overlay = $('.overlay');
+                $overlay.css('display', 'block');
+                $.when(
+                    $.get(app.PMD_URI, function(text) {
+                        self.data.pmd = text;
+                    }),
+                    $.get(app.DAT_URI, function(text) {
+                        self.data.dat = text;
+                    }),
+                    $.get(app.MEASURE_URI, function(text) {
+                        self.data.measure = text;
+                    })
+                ).then(
+                    function() {
+                        $overlay.css('display', 'none');
+                        _.extend(self.data, app.PICTOGRAM_PARAMS);
+                        self.remove();
+                        app.sandbox.trigger('pictogram:show', self.data);
+                    }
+                );
             }
         },
 

@@ -35,9 +35,33 @@
         },
 
         showNet: function() {
-            if(this.validate()) {
-                this.remove();
-                app.sandbox.trigger('net:show', this.data);
+            var self = this,
+                inputType = $('input[name="input-type"]:checked').val(),
+                $overlay;
+
+            if(inputType === 'custom') {
+                if(this.validate()) {
+                    this.remove();
+                    app.sandbox.trigger('net:show', this.data);
+                }
+            } else {
+                $overlay = $('.overlay');
+                $overlay.css('display', 'block');
+                $.when(
+                    $.get(app.PMD_URI, function(text) {
+                        self.data.pmd = text;
+                    }),
+                    $.get(app.DAT_URI, function(text) {
+                        self.data.dat = text;
+                    })
+                ).then(
+                    function() {
+                        $overlay.css('display', 'none');
+                        _.extend(self.data, app.NET_PARAMS);
+                        self.remove();
+                        app.sandbox.trigger('net:show', self.data);
+                    }
+                );
             }
         },
 
